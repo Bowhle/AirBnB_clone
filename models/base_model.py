@@ -5,35 +5,30 @@ import models
 
 
 class BaseModel():
-    """ A base model class that defines all common
-    attributes/methods for other classes
-    also represents the base model for the Airbnb project
-    """
+    """Base model class for other models."""
+
     def __init__(self, *args, **kwargs):
-        """ A public instance attribute """
         time_format = "%Y-%m-%dT%H:%M:%S.%f"
-        if (len(kwargs) == 0):
+        if not kwargs:
             self.id = str(uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
-            models.storage.new(self)
+            models.storage.new(self)  # Add new object to the storage
         else:
-            for k, v in kwargs.items():
-                if k == "created_at" or k == "updated_at":
-                    self.__dict__[k] = datetime.strptime(v, time_format)
+            for key, value in kwargs.items():
+                if key in ["created_at", "updated_at"]:
+                    self.__dict__[key] = datetime.strptime(value, time_format)
                 else:
-                    self.__dict__[k] = v
+                    self.__dict__[key] = value
 
     def save(self):
-        """ a public instance method that updates the updated_at
-        with the currnt date
-        """
+        """Updates updated_at and saves the object."""
         self.updated_at = datetime.now()
         models.storage.save()
 
     def to_dict(self):
-        """ returns a dictionary containing all keys/values
-        of __dict__ of the instance
+        """ returns a dict containing all keys or values
+        of the instance
         """
         new_dict = self.__dict__.copy()
         new_dict["created_at"] = self.created_at.isoformat()
@@ -42,7 +37,5 @@ class BaseModel():
         return new_dict
 
     def __str__(self):
-        """This will print a string representation of the base
-        model class for the Airbnb clone project
-        """
+        """This will print a string rep of the base model"""
         return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
