@@ -1,8 +1,12 @@
 #!/usr/bin/python3
 import json
-""" this is a class that defines file storage"""
 from models.base_model import BaseModel
 from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 
 
 class FileStorage:
@@ -12,7 +16,7 @@ class FileStorage:
 
     def all(self):
         """Returns the dictionary of all objects."""
-        return FileStorage.__objects
+        return self.__objects
 
     def new(self, obj):
         """Adds a new object to the storage dictionary."""
@@ -39,7 +43,16 @@ class FileStorage:
                         obj = BaseModel(**value)
                     elif class_name == "User":
                         obj = User(**value)
-                    # Add other classes if needed
+                    elif class_name == "State":
+                        obj = State(**value)
+                    elif class_name == "City":
+                        obj = City(**value)
+                    elif class_name == "Amenity":
+                        obj = Amenity(**value)
+                    elif class_name == "Place":
+                        obj = Place(**value)
+                    elif class_name == "Review":
+                        obj = Review(**value)
                     self.new(obj)
         except FileNotFoundError:
             pass
