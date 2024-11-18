@@ -40,3 +40,8 @@ class FileStorage:
                     self.new(obj)
         except FileNotFoundError:
             pass
+
+    @classmethod
+    def all(cls):
+        """Returns a dictionary of all objects stored."""
+        return cls.__objects
