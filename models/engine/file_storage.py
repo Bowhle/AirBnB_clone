@@ -20,39 +20,23 @@ class FileStorage:
 
     def new(self, obj):
         """Adds a new object to the storage dictionary."""
-        ob = str(obj.__class__.__name__)
-        FileStorage.__objects[f"{ob}.{obj.id}"] = obj
+        key = f"{obj.__class__.__name__}.{obj.id}"
+        self.__objects[key] = obj
 
     def save(self):
         """Serializes the objects to a JSON file."""
-        objdic = {}
-        for k, v in FileStorage.__objects.items():
-            objdic[k] = v.to_dict()
-
-        with open(FileStorage.__file_path, mode='w') as file:
-            json.dump(objdic, file)
+        obj_dict = {key: obj.to_dict() for key, obj in self.__objects.items()}
+        with open(self.__file_path, mode='w') as file:
+            json.dump(obj_dict, file)
 
     def reload(self):
         """Deserializes the JSON file back into objects."""
         try:
-            with open(FileStorage.__file_path, 'r') as f:
-                obj_dict = json.load(f)
+            with open(self.__file_path, 'r') as file:
+                obj_dict = json.load(file)
                 for key, value in obj_dict.items():
                     class_name = value["__class__"]
-                    if class_name == "BaseModel":
-                        obj = BaseModel(**value)
-                    elif class_name == "User":
-                        obj = User(**value)
-                    elif class_name == "State":
-                        obj = State(**value)
-                    elif class_name == "City":
-                        obj = City(**value)
-                    elif class_name == "Amenity":
-                        obj = Amenity(**value)
-                    elif class_name == "Place":
-                        obj = Place(**value)
-                    elif class_name == "Review":
-                        obj = Review(**value)
+                    obj = eval(class_name)(**value)
                     self.new(obj)
         except FileNotFoundError:
             pass
