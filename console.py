@@ -112,6 +112,24 @@ class HBNBCommand(cmd.Cmd):
             instances = [str(obj) for obj in storage.all().values()]
         print("[{}]".format(", ".join(instances)))
 
+    def do_class_all(self, args):
+        """Show all instances of a specific class."""
+        if not args:
+            print("** class name missing **")
+            return
+        class_name = args.split()[0]
+        if class_name not in globals():
+            print("** class doesn't exist **")
+            return
+        class_objects = [obj for obj in storage.all().values() if obj.__class__.__name__ == class_name]
+        if class_objects:
+            instances = [
+                f"[{class_name}] ({obj.id}) {obj.to_dict()}" for obj in class_objects
+            ]
+            print("[{}]".format(", ".join(instances)))
+        else:
+            print(f"** no instances of class {class_name} found **")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
