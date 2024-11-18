@@ -27,7 +27,7 @@ class TestFileStorage(unittest.TestCase):
         """Test that all() returns the correct dictionary of objects."""
         self.storage.new(self.obj)
         self.storage.new(self.user)
-        all_objects = self.storage.all()  # Using the class method all()
+        all_objects = self.storage.all()
         self.assertEqual(len(all_objects), 2)
         self.assertIn(f"BaseModel.{self.obj.id}", all_objects)
         self.assertIn(f"User.{self.user.id}", all_objects)
@@ -35,7 +35,7 @@ class TestFileStorage(unittest.TestCase):
     def test_new(self):
         """Test that new() correctly adds an object to the storage."""
         self.storage.new(self.obj)
-        all_objects = self.storage.all()  # Using the class method all()
+        all_objects = self.storage.all()
         self.assertIn(f"BaseModel.{self.obj.id}", all_objects)
 
     def test_save(self):
@@ -54,7 +54,7 @@ class TestFileStorage(unittest.TestCase):
         # Clear objects to ensure reload works
         FileStorage._FileStorage__objects = {}
         self.storage.reload()
-        all_objects = self.storage.all()  # Using the class method all()
+        all_objects = self.storage.all()
         self.assertIn(f"BaseModel.{self.obj.id}", all_objects)
 
     def test_reload_file_not_found(self):

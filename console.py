@@ -11,6 +11,17 @@ from models.place import Place
 from models.review import Review
 
 
+classes = {
+    "BaseModel": BaseModel,
+    "User": User,
+    "State": State,
+    "City": City,
+    "Amenity": Amenity,
+    "Place": Place,
+    "Review": Review,
+}
+
+
 class HBNBCommand(cmd.Cmd):
     """Command interpreter class for the Airbnb clone."""
 
@@ -109,7 +120,9 @@ class HBNBCommand(cmd.Cmd):
                 if obj.__class__.__name__ == class_name
             ]
         else:
-            instances = [str(obj) for obj in storage.all().values()]
+            instances = [
+                str(obj) for obj in storage.all().values()
+            ]
         print("[{}]".format(", ".join(instances)))
 
     def do_class_all(self, args):
@@ -121,14 +134,31 @@ class HBNBCommand(cmd.Cmd):
         if class_name not in globals():
             print("** class doesn't exist **")
             return
-        class_objects = [obj for obj in storage.all().values() if obj.__class__.__name__ == class_name]
+        class_objects = [
+            obj for obj in storage.all().values()
+            if obj.__class__.__name__ == class_name
+        ]
         if class_objects:
             instances = [
-                f"[{class_name}] ({obj.id}) {obj.to_dict()}" for obj in class_objects
+                f"[{class_name}] ({obj.id}) {obj.to_dict()}"
+                for obj in class_objects
             ]
             print("[{}]".format(", ".join(instances)))
         else:
             print(f"** no instances of class {class_name} found **")
+
+    def do_count(self, arg):
+        """Retrieve the number of instances of a class: <class name>.count()"""
+        if not arg:
+            print("** class name missing **")
+            return
+        elif arg not in classes:
+            print("** class doesn't exist **")
+            return
+
+        class_name = classes[arg]
+        count = class_name.count()  # Calls the count method of the class
+        print(count)
 
 
 if __name__ == "__main__":

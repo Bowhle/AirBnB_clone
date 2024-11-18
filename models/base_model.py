@@ -36,7 +36,8 @@ class BaseModel:
 
     def __str__(self):
         """This will print a string representation of the base model."""
-        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
+        return (f"[{self.__class__.__name__}] ({self.id}) "
+                f"{self.__dict__}")
 
     @classmethod
     def all(cls):
@@ -46,3 +47,11 @@ class BaseModel:
             if isinstance(obj, cls):
                 all_instances.append(str(obj))
         return all_instances
+
+    def count(cls):
+        """Returns the number of instances of the class."""
+        count = 0
+        for obj in models.storage.all().values():
+            if isinstance(obj, cls):
+                count += 1
+        return count

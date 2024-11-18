@@ -7,10 +7,12 @@ from models.base_model import BaseModel
 import unittest
 from datetime import datetime
 from time import sleep
+from models import storage
 
 
 class TestBaseModelInstantiation(unittest.TestCase):
     """ Tests for the BaseModel class instantiation. """
+
     def test_no_args_instance(self):
         """ Test if the model works with no args passed. """
         self.assertEqual(BaseModel, type(BaseModel()))
@@ -77,6 +79,7 @@ class TestBaseModelInstantiation(unittest.TestCase):
 
 class TestBaseModelSave(unittest.TestCase):
     """ Tests for the save method of BaseModel. """
+
     def test_save_once(self):
         """ Test if save updates the updated_at time. """
         Bm1 = BaseModel()
@@ -94,6 +97,39 @@ class TestBaseModelSave(unittest.TestCase):
         second_update = Bm1.updated_at
         Bm1.save()
         self.assertLess(first_update, second_update)
+
+
+class TestBaseModelCount(unittest.TestCase):
+    """ Tests for the count method of BaseModel. """
+
+    def setUp(self):
+        """ Setup before each test. """
+        # Clear the objects to ensure a clean environment
+        storage._FileStorage__objects = {}
+
+    def test_count(self):
+        """ Test that count() correctly counts instances of BaseModel. """
+        # Initial count of BaseModel instances
+        initial_count = BaseModel.count()
+        # Add a new BaseModel instance
+        Bm1 = BaseModel()
+        self.assertEqual(BaseModel.count(), initial_count + 1)
+        # Add another instance of BaseModel
+        Bm2 = BaseModel()
+        self.assertEqual(BaseModel.count(), initial_count + 2)
+
+    def test_count_after_save(self):
+        """ Test that count() returns correct value after save(). """
+        initial_count = BaseModel.count()
+        Bm1 = BaseModel()
+        Bm1.save()  # save the instance
+        self.assertEqual(BaseModel.count(), initial_count + 1)
+
+    def test_count_for_other_classes(self):
+        """ Test that count() works for other classes (like User). """
+        initial_user_count = User.count()
+        Bm1 = User()
+        self.assertEqual(User.count(), initial_user_count + 1)
 
 
 if __name__ == "__main__":
