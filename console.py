@@ -14,6 +14,19 @@ class HBNBCommand(cmd.Cmd):
     """Command interpreter for the Airbnb clone."""
     prompt = "(hbnb) "
 
+    def do_quit(self, args):
+        """Quit command to exit the program."""
+        return True
+
+    def do_EOF(self, args):
+        """Handle EOF (Ctrl+D) to exit the program."""
+        print()  # Print a new line before exiting
+        return True
+
+    def emptyline(self):
+        """Override empty line behavior to do nothing."""
+        pass
+
     # Create new object
     def do_create(self, args):
         """Create a new object of any class."""
